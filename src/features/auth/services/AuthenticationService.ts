@@ -15,7 +15,7 @@ export interface IAuthenticationService {
     comparePasswords(candidate: string, hash: string): Promise<boolean>;
     generateAuthToken(payload: ITokenPayload): string;
     /** Attempts to verify and decode a token, producing an Either Monad result. */
-    verifyAndDecodeAuthToken(token: string): Either<Authentication.InvalidTokenError, ITokenPayload>;
+    verifyAndDecodeAuthToken(token: string): Either<AuthenticationErrors.InvalidTokenError, ITokenPayload>;
 }
 
 /**
@@ -58,11 +58,11 @@ export class AuthenticationService implements IAuthenticationService {
         return this.jwt.sign(payload, <string> process.env.JWT_SECRET);
     }
 
-    verifyAndDecodeAuthToken(token: string): Either<Authentication.InvalidTokenError, ITokenPayload> {
+    verifyAndDecodeAuthToken(token: string): Either<AuthenticationErrors.InvalidTokenError, ITokenPayload> {
         try {
             return right(<ITokenPayload> this.jwt.verify(token, <string> process.env.JWT_SECRET));
         } catch (e) {
-            return left(new Authentication.InvalidTokenError());
+            return left(new AuthenticationErrors.InvalidTokenError());
         }
     }
 }

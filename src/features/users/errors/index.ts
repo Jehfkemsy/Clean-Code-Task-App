@@ -1,4 +1,4 @@
-import { BaseErrors } from './../../../common/errors';
+import { BaseErrors } from '../../../common/errors';
 
 export namespace CreateUserErrors {
     export class UsernameTakenError extends BaseErrors.BaseError {

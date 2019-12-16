@@ -1,7 +1,7 @@
-import { IDomainPersistenceMapper } from './../../../../common/mappers/domain-dal/mapper';
+import { IDomainPersistenceMapper } from '../../../../common/mappers/domain-dal/mapper';
 
-import { User } from './../../models/domain/user';
-import { UserDalEntity } from './../../models/entity/user';
+import { User } from '../../models/domain/user';
+import { UserDalEntity } from '../../models/entity/user';
 
 export const UserDomainPersistenceMapper = (): IDomainPersistenceMapper<User, UserDalEntity> => ({
     toPersistence: (user: User): UserDalEntity => ({

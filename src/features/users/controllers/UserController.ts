@@ -9,7 +9,10 @@ import { HTTP } from '../../../common/interfaces/interfaces';
 import { CreateUserDTO, LoggedInUserResponseDTO, UserResponseDTO } from '../dtos';
 import { UserCredentialsDTO, UpdateUserDTO } from './../dtos/index';
 
-import { UserValidators } from '../validation';
+import { UserValidators } from '../validation/user-validation';
+
+import { stripBearerToken } from './../../../middleware/utils/stripBearerToken';
+import { verifyAuthProvider } from './../../../middleware/auth/verifyAuth';
 
 
 /**
@@ -48,6 +51,7 @@ export class UserController extends BaseHTTPController {
 
     @GET()
     @route('/me')
+    @before([stripBearerToken, inject(verifyAuthProvider)])
     async getMe(request: Request, response: Response) {
         const user = await this.userService.getUserById(request.user!.id);
         return this.withDTO<UserResponseDTO>(user);
@@ -55,6 +59,7 @@ export class UserController extends BaseHTTPController {
 
     @PATCH()
     @route('/me')
+    @before([stripBearerToken, inject(verifyAuthProvider)])
     async updateMe(request: Request, response: Response) {
         await this.userService.updateUserById(request.user!.id, request.body as UpdateUserDTO);
         return this.ok();
@@ -62,6 +67,7 @@ export class UserController extends BaseHTTPController {
 
     @DELETE()
     @route('/me')
+    @before([stripBearerToken, inject(verifyAuthProvider)])
     async deleteMe(request: Request, response: Response) {
         await this.userService.deleteUserById(request.params.id);
         return this.ok();

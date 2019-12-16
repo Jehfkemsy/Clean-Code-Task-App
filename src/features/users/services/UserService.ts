@@ -13,9 +13,9 @@ import {
     UpdateUserDTO
 } from './../dtos';
 
-import { mappers } from './../mappers/domain-dto/index';
+import { mappers } from '../mappers/domain-dto/domainDtoMapper';
 
-import { UserValidators } from '../validation';
+import { UserValidators } from '../validation/user-validation';
 import { validate } from './../../../utils/wrappers/validation/joi/index';
 
 import { CreateUserErrors } from '../errors';

@@ -1,4 +1,4 @@
-import { User } from './../../models/domain/user';
+import { User } from '../../models/domain/user';
 import { UserResponseDTO } from '../../dtos';
 
 export const mappers = {
