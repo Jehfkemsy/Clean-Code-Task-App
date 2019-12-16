@@ -41,6 +41,7 @@ export class UserService implements IUserService {
         private readonly authService: IAuthenticationService
     ) {}
 
+    // Note order - attempting to fail fast to save network calls.
     async signUpUser(userDTO: CreateUserDTO): Promise<void> {
         const validationResult = validate(UserValidators.createUser, userDTO);
 
@@ -133,7 +134,7 @@ export class UserService implements IUserService {
         // Emit event here.
     }
 
-    deleteUserById(id: string): Promise<void> {
+    async deleteUserById(id: string): Promise<void> {
         throw new Error("Method not implemented.");
     }
 }

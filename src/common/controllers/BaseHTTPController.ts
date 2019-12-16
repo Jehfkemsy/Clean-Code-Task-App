@@ -15,7 +15,7 @@ export class BaseHTTPController {
       * @param json JSON Response Payload.
       */
     protected ok(json?: any) {
-
+		return this.json(json, HttpStatus.OK);
 	}
 	
 	/**
@@ -23,7 +23,7 @@ export class BaseHTTPController {
 	 * @param dto Response DTO
 	 */
 	protected withDTO<T>(dto: T) {
-
+		return this.ok(dto);
 	}
 
 	/**
@@ -31,10 +31,34 @@ export class BaseHTTPController {
 	 * @param json JSON Response Payload
 	 */
 	protected createdOk(json?: any) {
-
+		return this.json(json, HttpStatus.OK);
 	}
 
 	//#endregion
+
+	//#region Client Error (4xx) Response Helpers
+
+	/**
+	 * Responds with a status code 400 and the provided error to the HTTP Client.
+	 * @param error The error message.
+	 */
+	protected clientError(error: any) {
+        return this.json(error, HttpStatus.BAD_REQUEST);
+	}
+	
+	//#endregion
+
+	//#region Failure Errors
+
+    /**
+     * Responds with a status code 500 and the provided JSON to the HTTP client.
+     * @param error Error response payload
+     */
+    protected fail(error?: any) {
+        this.json(error, HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+	
+    //#endregion
 
 	//#region Miscellaneous JSON Response Helpers
 	
