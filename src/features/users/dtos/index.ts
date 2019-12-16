@@ -11,6 +11,7 @@ export interface IUserDTO {
 /**
  * Represents a user shape for creation.
  */
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface CreateUserDTO extends IUserDTO {};
 //#endregion
 
@@ -37,14 +38,14 @@ export interface UserResponseDTO {
         username: string;
         biography: string;
         email: string;
-    }
+    };
 }
 
 /**
  * Represents a collection of users for response.
  */
 export interface UserCollectionResponseDTO {
-    users: UserResponseDTO['user'][]
+    users: UserResponseDTO['user'][];
 }
 
 /**

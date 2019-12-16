@@ -4,8 +4,8 @@ import { User } from './../features/users/models/domain/user';
 
 declare module 'express-serve-static-core' {
     interface Request {
-        container: AwilixContainer,
-        token?: string,
-        user?: User
+        container: AwilixContainer;
+        token?: string;
+        user?: User;
     }
 }

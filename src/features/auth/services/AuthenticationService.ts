@@ -35,7 +35,7 @@ export class AuthenticationService implements IAuthenticationService {
         private readonly jwt: typeof jsonwebtoken
     ) {}
 
-    hashPassword(plainTextPassword: string, rounds: number = 12): Promise<string> {
+    hashPassword(plainTextPassword: string, rounds = 12): Promise<string> {
         return new Promise((resolve, reject) => {
             // Will auto-generate a salt.
             this.bcrypt.hash(plainTextPassword, rounds, (err: Error, hash: string) => {
@@ -55,12 +55,12 @@ export class AuthenticationService implements IAuthenticationService {
     }
 
     generateAuthToken(payload: ITokenPayload): string {
-        return this.jwt.sign(payload, <string> process.env.JWT_SECRET);
+        return this.jwt.sign(payload, process.env.JWT_SECRET as string);
     }
 
     verifyAndDecodeAuthToken(token: string): Either<AuthenticationErrors.InvalidTokenError, ITokenPayload> {
         try {
-            return right(<ITokenPayload> this.jwt.verify(token, <string> process.env.JWT_SECRET));
+            return right(this.jwt.verify(token, process.env.JWT_SECRET as string) as ITokenPayload);
         } catch (e) {
             return left(new AuthenticationErrors.InvalidTokenError());
         }

@@ -12,6 +12,6 @@ export const mappers = {
                 email: user.email,
                 biography: user.biography
             }
-        }
+        };
     }
 }

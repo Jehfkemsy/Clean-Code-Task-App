@@ -5,7 +5,11 @@ import {
     Lifetime, 
     createContainer,
      InjectionMode, 
-     AwilixContainer, 
+     AwilixContainer,
+     Constructor,
+     BuildResolver,
+     FunctionReturning,
+     DisposableResolver, 
 } from 'awilix';
 
 /**
@@ -14,9 +18,9 @@ import {
 export const configureContainer = (): AwilixContainer => {
     const container = createContainer({ injectionMode: InjectionMode.CLASSIC });
 
-    // Awilix helper methods for Scoped Lifetime
-    const asClassScoped = (dep: any) => asClass(dep, { lifetime: Lifetime.SCOPED });
-    const asFunctionScoped = (dep: any) => asFunction(dep, { lifetime: Lifetime.SCOPED });
+    // Awilix helper methods for Scoped Lifetime.
+    const asClassScoped = <T extends Constructor<T>>(dep: T): BuildResolver<T> & DisposableResolver<T> => asClass(dep, { lifetime: Lifetime.SCOPED });
+    const asFunctionScoped = <T extends FunctionReturning<T>>(dep: T): BuildResolver<T> & DisposableResolver<T> => asFunction(dep, { lifetime: Lifetime.SCOPED });
 
     // Register Controllers, Services, Repositories, and Adapters.
     container.loadModules([

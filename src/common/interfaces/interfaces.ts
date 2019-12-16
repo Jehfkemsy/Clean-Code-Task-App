@@ -5,7 +5,7 @@ import express from 'express';
  */
 export namespace HTTP {
     export interface IHttpContext {
-        req: express.Request,
-        res: express.Response
+        req: express.Request;
+        res: express.Response;
     }
 }

@@ -104,7 +104,7 @@ export class UserService implements IUserService {
         const user = await this.userRepository.getUserById(id);
         return mappers.toUserResponseDTO(user);
     }
-    
+
     async updateUserById(id: string, updateUserDTO: UpdateUserDTO): Promise<void> {
         const validationResult = validate(UserValidators.updateUser, updateUserDTO);
 
@@ -123,9 +123,10 @@ export class UserService implements IUserService {
 
         const user = await this.userRepository.getUserById(id);
 
-        const updatedUser = buildUser({ 
-            ...(() => { const { id, ...rest } = user; return rest; })(),
-            ...updateUserDTO, 
+        const updatedUser = buildUser({
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            ...((): Omit<User, 'id'> => { const { id, ...rest } = user; return rest; })(),
+            ...updateUserDTO,
             password: user.password // <-- Just to be safe, ensure the password is never updated.
         }, id);
 
