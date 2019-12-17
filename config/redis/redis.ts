@@ -6,14 +6,14 @@ const client = new Redis(REDIS_URL);
 const subscriber = new Redis(REDIS_URL);
 
 export const opts = {
-	createClient: (type: string): Redis.Redis => {
-		switch (type) {
-			case 'client':
-				return client;
-			case 'subscriber':
-				return subscriber;
-			default:
-				return new Redis(REDIS_URL);
-		}
-	}
+    createClient: (type: string): Redis.Redis => {
+        switch (type) {
+            case 'client':
+                return client;
+            case 'subscriber':
+                return subscriber;
+            default:
+                return new Redis(REDIS_URL);
+        }
+    }
 };
