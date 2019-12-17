@@ -1,7 +1,7 @@
 /**
  * Represents a payload for a triggered event reacting to a user that has signed up.
  */
-export interface IUserSignedUpEvent {
+export interface IUserSignedUpEventPayload {
     id: string;
     email: string;
     firstName: string;
@@ -10,14 +10,22 @@ export interface IUserSignedUpEvent {
 /**
  * Represents a payload for a triggered event reacting to a user that has logged in.
  */
-export interface IUserLoggedInEvent {
+export interface IUserLoggedInEventPayload {
     id: string;
+}
+
+/**
+ * Represents a payload for a triggered event reacting to a user that has failed to log in.
+ */
+export interface IUserFailedLoggingInPayload {
+    email: string;
+    failedAttempts: number;
 }
 
 /**
  * Represents a payload for a triggered event reacting to a user that has updated their account/profile.
  */
-export interface IUserUpdatedEvent {
+export interface IUserUpdatedEventPayload {
     id: string;
     passwordChanged: boolean;
 }

@@ -20,6 +20,7 @@ import { validate } from './../../../utils/wrappers/validation/joi/index';
 
 import { CreateUserErrors } from '../errors';
 import { AuthenticationErrors } from '../../auth/errors';
+
 import { userEvents } from '../pub-sub/events/events';
 
 /**
@@ -92,10 +93,12 @@ export class UserService extends EventEmitter implements IUserService {
 
             const token = this.authService.generateAuthToken({ id: user.id });
 
-            // Will emit event here.
+            this.emit(userEvents.userLoggedIn, { id: user.id });
 
             return { token };
         } catch (e) {
+            // TODO: Support user failing to log in.
+
             // TODO: Refactor this switch statement.
             switch (e.constructor) {
                 case AuthenticationErrors.AuthorizationError:
@@ -138,7 +141,7 @@ export class UserService extends EventEmitter implements IUserService {
 
         await this.userRepository.updateUser(updatedUser);
 
-        // Emit event here.
+        this.emit(userEvents.userUpdated, { id: user.id, passwordUpdated: false });
     }
 
     async deleteUserById(id: string): Promise<void> {

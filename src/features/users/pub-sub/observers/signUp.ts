@@ -1,10 +1,10 @@
 import { EventEmitter } from 'events';
 
-import { IUserSignedUpEvent } from './../payloads/payloadInterfaces';
+import { IUserSignedUpEventPayload } from './../payloads/payloadInterfaces';
 
 const eventEmitter = new EventEmitter();
 
-eventEmitter.on('USER_SIGNED_UP', (payload: IUserSignedUpEvent) => {
+eventEmitter.on('USER_SIGNED_UP', (payload: IUserSignedUpEventPayload) => {
     console.log('User signed up', payload);   
     
     // Add to queue.
