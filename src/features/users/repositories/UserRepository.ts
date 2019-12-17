@@ -38,43 +38,43 @@ export class UserRepository extends BaseKnexRepository implements IUserRepositor
         this.dataMapper = userDomainPersistenceMapper;
     }
 
-    insertUser(user: User): Promise<void> {
+    async insertUser(user: User): Promise<void> {
         throw new Error("Method not implemented.");
     }
 
-    getAllUsers(): Promise<User[]> {
+    async getAllUsers(): Promise<User[]> {
         throw new Error("Method not implemented.");
     }
 
-    getUserById(id: string): Promise<User> {
+    async getUserById(id: string): Promise<User> {
         throw new Error("Method not implemented.");
     }
 
-    findUserByEmail(email: string): Promise<User> {
+    async findUserByEmail(email: string): Promise<User> {
         throw new Error("Method not implemented.");
     }
 
-    updateUser(user: User): Promise<void> {
+    async updateUser(user: User): Promise<void> {
         throw new Error("Method not implemented.");
     }
 
-    removeUserById(id: string): Promise<void> {
+    async removeUserById(id: string): Promise<void> {
         throw new Error("Method not implemented.");
     }
 
-    existsByUsername(username: string): Promise<boolean> {
+    async existsByUsername(username: string): Promise<boolean> {
         throw new Error("Method not implemented.");
     }
 
-    existsByEmail(email: string): Promise<boolean> {
+    async existsByEmail(email: string): Promise<boolean> {
         throw new Error("Method not implemented.");
     }
 
-    exists(t: User): Promise<boolean> {
+    async exists(t: User): Promise<boolean> {
         throw new Error("Method not implemented.");
     }
 
-    existsById(id: string): Promise<boolean> {
+    async existsById(id: string): Promise<boolean> {
         throw new Error("Method not implemented.");
     }
 }

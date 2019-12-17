@@ -1,4 +1,4 @@
-import { ulid } from 'ulid';
+import { EventEmitter } from 'events';
 
 import { User, buildUser } from './../models/domain/user';
 
@@ -20,6 +20,7 @@ import { validate } from './../../../utils/wrappers/validation/joi/index';
 
 import { CreateUserErrors } from '../errors';
 import { AuthenticationErrors } from '../../auth/errors';
+import { userEvents } from '../pub-sub/events/events';
 
 /**
  * Interface providing methods for use with business logic-related operations.
@@ -35,11 +36,13 @@ export interface IUserService {
 /**
  * Contains methods that encapsulate primary user-related business logic.
  */
-export class UserService implements IUserService {
+export class UserService extends EventEmitter implements IUserService {
     public constructor (
         private readonly userRepository: IUserRepository,
         private readonly authService: IAuthenticationService
-    ) {}
+    ) {
+        super();
+    }
 
     // Note order - attempting to fail fast to save network calls.
     async signUpUser(userDTO: CreateUserDTO): Promise<void> {
@@ -65,8 +68,11 @@ export class UserService implements IUserService {
 
         await this.userRepository.insertUser(user);
 
-        // Will emit event down here.
-
+        this.emit(userEvents.userSignedUp, { 
+            id: user.id,
+            email: user.email,
+            firstName: user.firstName
+        });
     }    
     
     async loginUser(credentialsDTO: UserCredentialsDTO): Promise<LoggedInUserResponseDTO> {
@@ -136,6 +142,7 @@ export class UserService implements IUserService {
     }
 
     async deleteUserById(id: string): Promise<void> {
+        console.log(id);
         throw new Error("Method not implemented.");
     }
 }
