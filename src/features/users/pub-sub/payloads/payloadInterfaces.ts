@@ -12,7 +12,7 @@ export interface IUserSignedUpEventPayload {
  */
 export interface IUserLoggedInEventPayload {
     id: string;
-}
+};
 
 /**
  * Represents a payload for a triggered event reacting to a user that has failed to log in.
@@ -20,7 +20,7 @@ export interface IUserLoggedInEventPayload {
 export interface IUserFailedLoggingInPayload {
     email: string;
     failedAttempts: number;
-}
+};
 
 /**
  * Represents a payload for a triggered event reacting to a user that has updated their account/profile.
@@ -28,4 +28,4 @@ export interface IUserFailedLoggingInPayload {
 export interface IUserUpdatedEventPayload {
     id: string;
     passwordChanged: boolean;
-}
+};
