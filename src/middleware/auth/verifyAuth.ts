@@ -11,9 +11,11 @@ import { AuthenticationErrors } from '../../features/auth/errors';
 export const verifyAuthProvider = (
     authService: IAuthenticationService, 
     userRepository: IUserRepository
-) => async (req: Request, res: Response, next: NextFunction) => {
+) => async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-        const decodedResult = authService.verifyAndDecodeAuthToken(req.token!);
+        if (!req.token) throw new AuthenticationErrors.AuthorizationError();
+        
+        const decodedResult = authService.verifyAndDecodeAuthToken(req.token);
 
         if (decodedResult.isLeft())
             throw decodedResult.value;

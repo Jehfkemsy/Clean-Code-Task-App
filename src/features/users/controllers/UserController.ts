@@ -57,7 +57,7 @@ export class UserController extends BaseHTTPController {
     @route('/me')
     @before([stripBearerToken, inject(verifyAuthProvider)])
     async updateMe(request: Request): Promise<Response> {
-        await this.userService.updateUserById((request.user && request.user.id) || 'a', request.body as UpdateUserDTO);
+        await this.userService.updateUserById(request.user.id, request.body as UpdateUserDTO);
         return this.ok();
     }
 
