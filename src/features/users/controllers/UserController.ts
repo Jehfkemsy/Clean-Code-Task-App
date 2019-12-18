@@ -14,6 +14,8 @@ import { UserValidators } from '../validation/user-validation';
 import { stripBearerToken } from './../../../middleware/utils/stripBearerToken';
 import { verifyAuthProvider } from './../../../middleware/auth/verifyAuth';
 
+import { AuthenticationErrors } from './../../auth/errors/index';
+
 /**
  * HTTP Client interface/controller gateway to application for handling user-related operations.
  */
@@ -49,7 +51,8 @@ export class UserController extends BaseHTTPController {
     @route('/me')
     @before([stripBearerToken, inject(verifyAuthProvider)])
     async getMe(request: Request): Promise<Response> {
-        const user = await this.userService.getUserById(request.user!.id);
+        if (!request.user) throw AuthenticationErrors.AuthorizationError.create();
+        const user = await this.userService.getUserById(request.user.id);
         return this.withDTO<UserResponseDTO>(user);
     }
 
@@ -57,6 +60,7 @@ export class UserController extends BaseHTTPController {
     @route('/me')
     @before([stripBearerToken, inject(verifyAuthProvider)])
     async updateMe(request: Request): Promise<Response> {
+        if (!request.user) throw AuthenticationErrors.AuthorizationError.create();
         await this.userService.updateUserById(request.user.id, request.body as UpdateUserDTO);
         return this.ok();
     }

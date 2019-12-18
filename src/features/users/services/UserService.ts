@@ -22,6 +22,7 @@ import { CreateUserErrors } from '../errors';
 import { AuthenticationErrors } from '../../auth/errors';
 
 import { userEvents } from '../pub-sub/events/events';
+import { CommonErrors } from '../../../common/errors';
 
 /**
  * Interface providing methods for use with business logic-related operations.
@@ -50,7 +51,7 @@ export class UserService extends EventEmitter implements IUserService {
         const validationResult = validate(UserValidators.createUser, userDTO);
 
         if (validationResult.isLeft())
-            throw new Error(validationResult.value);
+            throw CommonErrors.ValidationError.create(validationResult.value);
 
         const [usernameTaken, emailTaken] = await Promise.all([
             this.userRepository.existsByUsername(userDTO.username),
@@ -80,7 +81,7 @@ export class UserService extends EventEmitter implements IUserService {
         const validationResult = validate(UserValidators.userCredentials, credentialsDTO);
 
         if (validationResult.isLeft())
-            throw new Error(validationResult.value);
+            throw CommonErrors.ValidationError.create(validationResult.value);
 
         const { email, password } = credentialsDTO;
 
@@ -118,7 +119,7 @@ export class UserService extends EventEmitter implements IUserService {
         const validationResult = validate(UserValidators.updateUser, updateUserDTO);
 
         if (validationResult.isLeft())
-            throw new Error(validationResult.value);
+            throw CommonErrors.ValidationError.create(validationResult.value);
 
         if (updateUserDTO.email) {
             const emailTaken = this.userRepository.existsByEmail(updateUserDTO.email);
