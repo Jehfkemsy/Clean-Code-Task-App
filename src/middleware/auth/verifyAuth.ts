@@ -13,7 +13,7 @@ export const verifyAuthProvider = (
     userRepository: IUserRepository
 ) => async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-        if (!req.token) throw new AuthenticationErrors.AuthorizationError();
+        if (!req.token) throw AuthenticationErrors.AuthorizationError.create();
         
         const decodedResult = authService.verifyAndDecodeAuthToken(req.token);
 
@@ -28,10 +28,10 @@ export const verifyAuthProvider = (
         next();
     } catch (e) {
         switch (e.constructor) {
+            // Fall through. Cool.
             case AuthenticationErrors.InvalidTokenError:
-                throw new AuthenticationErrors.AuthorizationError('The provided token is invalid.');
-            case AuthenticationErrors.InvalidTokenError:
-                throw new AuthenticationErrors.AuthorizationError('Please authenticate.');
+            case AuthenticationErrors.AuthorizationError:
+                throw AuthenticationErrors.AuthorizationError.create();
             default:
                 throw new Error();
         }

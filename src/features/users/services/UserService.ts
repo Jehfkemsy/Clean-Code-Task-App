@@ -58,10 +58,10 @@ export class UserService extends EventEmitter implements IUserService {
         ]) as [boolean, boolean];
 
         if (usernameTaken)
-            throw new CreateUserErrors.UsernameTakenError();
+            throw CreateUserErrors.UsernameTakenError.create();
     
         if (emailTaken)
-            throw new CreateUserErrors.EmailTakenError();
+            throw CreateUserErrors.EmailTakenError.create();
 
         const hash = await this.authService.hashPassword(userDTO.password);
 
@@ -89,7 +89,7 @@ export class UserService extends EventEmitter implements IUserService {
             const user = await this.userRepository.findUserByEmail(email);
             const isAuthorized = await this.authService.comparePasswords(password, user.password);
 
-            if (!isAuthorized) throw new AuthenticationErrors.AuthorizationError();
+            if (!isAuthorized) throw AuthenticationErrors.AuthorizationError.create();
 
             const token = this.authService.generateAuthToken({ id: user.id });
 
@@ -122,12 +122,12 @@ export class UserService extends EventEmitter implements IUserService {
 
         if (updateUserDTO.email) {
             const emailTaken = this.userRepository.existsByEmail(updateUserDTO.email);
-            if (emailTaken) throw new CreateUserErrors.EmailTakenError();
+            if (emailTaken) throw CreateUserErrors.EmailTakenError.create();
         }
 
         if (updateUserDTO.username) {
             const usernameTaken = this.userRepository.existsByUsername(updateUserDTO.username);
-            if (usernameTaken) throw new CreateUserErrors.UsernameTakenError();
+            if (usernameTaken) throw CreateUserErrors.UsernameTakenError.create();
         }
 
         const user = await this.userRepository.getUserById(id);
