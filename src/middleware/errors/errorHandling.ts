@@ -22,9 +22,12 @@ export const errorHandler = (err: Error, req: Request, res: Response, next: Next
                 return sendResponseForBaseError(401, err);
             // 500 responses.
             case ApplicationErrors.UnexpectedError:
-                return sendResponseForBaseError(500, err);
             default:
-                return res.status(500).send({ error: 'An unexpected error occurred.' });
+                return err instanceof ApplicationErrors.UnexpectedError ? (
+                    sendResponseForBaseError(500, err)
+                ) : (
+                    res.status(500).send({ error: 'An unexpected error occurred.' })
+                );
         }
     } else {
         return res.status(500).send({ error: 'An unexpected error occurred.' });
