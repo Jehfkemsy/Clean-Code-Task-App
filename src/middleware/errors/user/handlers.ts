@@ -2,8 +2,7 @@ import { Response, NextFunction } from 'express';
 
 import { BaseErrors } from '../../../common/errors';
 import { CreateUserErrors } from '../../../features/users/errors';
-import { ErrorHandlerFunction } from '../errorHandlerProvider';
-
+import { ErrorHandlerFunction } from '../other/errorHandlerProvider';
 
 /**
  * Handles user error to HTTP Response mapping.

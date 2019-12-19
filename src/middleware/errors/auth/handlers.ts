@@ -2,12 +2,11 @@ import { Response, NextFunction } from 'express';
 
 import { BaseErrors } from '../../../common/errors';
 
-import { ErrorHandlerFunction } from './../errorHandlerProvider';
+import { ErrorHandlerFunction } from '../other/errorHandlerProvider';
 import { AuthenticationErrors } from '../../../features/auth/errors';
 
-
 /**
- * Handles auth error to HTTP Response mapping.
+ * Handles authentication error to HTTP Response mapping.
  */
 export const authErrorHandler: ErrorHandlerFunction = (
     err: BaseErrors.BaseError, 

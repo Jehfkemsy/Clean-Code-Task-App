@@ -1,4 +1,4 @@
-import { ErrorHandlerFunction } from './errorHandlerProvider';
+import { ErrorHandlerFunction } from './other/errorHandlerProvider';
 
 // Common, User, Auth Error Handlers.
 import * as commonHandlers from './common/handlers';
@@ -16,5 +16,6 @@ export const errorHandlers: ErrorHandlerFunction[] = [];
 
 Object.keys(handlerUnion).forEach(key => errorHandlers.push(handlerUnion[key]));
 
-export * from './errorHandlerProvider';
+export * from './other/errorHandlerProvider';
+export * from './other/catchAllHandler';
 
