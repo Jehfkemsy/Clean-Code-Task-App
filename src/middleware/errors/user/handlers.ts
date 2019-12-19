@@ -8,7 +8,11 @@ import { ErrorHandlerFunction } from '../errorHandlerProvider';
 /**
  * Handles user error to HTTP Response mapping.
  */
-export const userErrorHandler: ErrorHandlerFunction = (err: BaseErrors.BaseError, res: Response, next: NextFunction): Response | void  => {
+export const userErrorHandler: ErrorHandlerFunction = (
+    err: BaseErrors.BaseError, 
+    res: Response, 
+    next: NextFunction
+): Response | void  => {
     switch (err.constructor) {
         case CreateUserErrors.UsernameTakenError:
         case CreateUserErrors.EmailTakenError:
