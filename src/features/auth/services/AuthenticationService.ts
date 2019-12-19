@@ -29,7 +29,7 @@ export interface ITokenPayload {
  * Handles authentication/authorization-related operations surrounding password
  * hashing, password comparison, auth token generation, and auth token verification.
  */
-export class AuthenticationService implements IAuthenticationService {
+export default class AuthenticationService implements IAuthenticationService {
     public constructor (
         private readonly bcrypt: typeof bcryptjs,
         private readonly jwt: typeof jsonwebtoken
@@ -62,7 +62,7 @@ export class AuthenticationService implements IAuthenticationService {
         try {
             return right(this.jwt.verify(token, process.env.JWT_SECRET as string) as ITokenPayload);
         } catch (e) {
-            return left(new AuthenticationErrors.InvalidTokenError());
+            return left(AuthenticationErrors.InvalidTokenError.create());
         }
     }
 }

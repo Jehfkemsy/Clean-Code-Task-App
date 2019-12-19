@@ -28,8 +28,8 @@ export interface IUserRepository extends IRepository<User>, IUnitOfWorkCapable {
 /**
  * Contains helper methods for interfacing with a given persistence technology.
  */
-export class UserRepository extends BaseKnexRepository implements IUserRepository {
-    private readonly dbContext: Knex | Knex.Transaction;
+export default class UserRepository extends BaseKnexRepository implements IUserRepository {
+    //private readonly dbContext: Knex | Knex.Transaction;
     private readonly dataMapper: IDomainPersistenceMapper<User, UserDalEntity>;
 
     // Test in-memory collection.
@@ -38,11 +38,11 @@ export class UserRepository extends BaseKnexRepository implements IUserRepositor
     ];
 
     public constructor (
-        knexInstance: Knex | Knex.Transaction,
+        //knexInstance: Knex | Knex.Transaction,
         userDomainPersistenceMapper: IDomainPersistenceMapper<User, UserDalEntity>
     ) {
         super();
-        this.dbContext = knexInstance;
+        //this.dbContext = knexInstance;
         this.dataMapper = userDomainPersistenceMapper;
     }
 
@@ -113,6 +113,6 @@ export class UserRepository extends BaseKnexRepository implements IUserRepositor
     }
 
     public forUnitOfWork(unitOfWork: IUnitOfWork): this {
-        return new UserRepository((unitOfWork as KnexUnitOfWork).trxContext, this.dataMapper) as this;
+        return new UserRepository(/*(unitOfWork as KnexUnitOfWork).trxContext,*/ this.dataMapper) as this;
     }
 }

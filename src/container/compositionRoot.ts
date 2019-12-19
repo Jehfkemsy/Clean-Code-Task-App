@@ -4,13 +4,17 @@ import {
     asClass, 
     Lifetime, 
     createContainer,
-     InjectionMode, 
-     AwilixContainer,
-     Constructor,
-     BuildResolver,
-     FunctionReturning,
-     DisposableResolver, 
+    InjectionMode, 
+    AwilixContainer,
+    Constructor,
+    BuildResolver,
+    FunctionReturning,
+    DisposableResolver, 
 } from 'awilix';
+
+import bcrypt from 'bcryptjs';
+import jsonwebtoken from 'jsonwebtoken';
+import { KnexUnitOfWorkFactory } from './../common/unit-of-work/UnitOfWork';
 
 /**
  * Builds a Dependency Injection Container.
@@ -22,31 +26,31 @@ export const configureContainer = (): AwilixContainer => {
     const asClassScoped = <T extends Constructor<T>>(dep: T): BuildResolver<T> & DisposableResolver<T> => asClass(dep, { lifetime: Lifetime.SCOPED });
     const asFunctionScoped = <T extends FunctionReturning<T>>(dep: T): BuildResolver<T> & DisposableResolver<T> => asFunction(dep, { lifetime: Lifetime.SCOPED });
 
-    // Register Controllers, Services, Repositories, and Adapters.
+    // Register Services, Repositories, Mappers, and Adapters.
     container.loadModules([
         [
-            './features/*/controllers/*.ts',
+            './../../build/features/*/services/*.js',
             {
                 register: asClass,
                 lifetime: Lifetime.SCOPED
             }
         ],
         [
-            './features/*/services/*.ts',
+            './../../build/features/*/repositories/*.js',
             {
                 register: asClass,
                 lifetime: Lifetime.SCOPED
             }
         ],
         [
-            './features/*/repositories/*.ts',
+            './../../build/features/*/mappers/*/*.js',
             {
-                register: asClass,
+                register: asFunction,
                 lifetime: Lifetime.SCOPED
             }
         ],
         [
-            './features/*/adapters/*.ts',
+            './../../build/features/*/adapters/*.js',
             {
                 register: asClass,
                 lifetime: Lifetime.SCOPED
@@ -57,8 +61,13 @@ export const configureContainer = (): AwilixContainer => {
         formatName: 'camelCase'
     });
 
+    container.register({
+        knexUnitOfWorkFactory: asClass(KnexUnitOfWorkFactory, { lifetime: Lifetime.SCOPED })
+    })
+
     // Register third-party or `asValue` dependencies.
     return container.register({
-
+        bcrypt: asValue(bcrypt),
+        jwt: asValue(jsonwebtoken)
     });
 }

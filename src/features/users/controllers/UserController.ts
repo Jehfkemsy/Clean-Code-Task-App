@@ -26,6 +26,13 @@ export class UserController extends BaseHTTPController {
     }
 
     @POST()
+    @route('/test')
+    async test(request: Request, response: Response): Promise<Response> {
+        console.log('here')
+        return response.status(200).send('hi')
+    }
+
+    @POST()
     @before(celebrate({ body: UserValidators.createUser }))
     async createUser(request: Request): Promise<Response> {
         await this.userService.signUpUser(request.body as CreateUserDTO);
@@ -36,6 +43,7 @@ export class UserController extends BaseHTTPController {
     @route('/login')
     @before(celebrate({ body: UserValidators.userCredentials }))
     async loginUser(request: Request): Promise<Response> {
+        console.log('here')
         const loggedInResponseDTO = await this.userService.loginUser(request.body as UserCredentialsDTO);
         return this.withDTO<LoggedInUserResponseDTO>(loggedInResponseDTO);
     }

@@ -11,7 +11,7 @@ import { HTTP } from './../../../common/interfaces/interfaces';
  * @param res  The Express `response` object.
  * @param next The Express `next` function.
  */
-export const registerHttpContext = (req: express.Request, res: express.Response, next: express.NextFunction) => {
+export const registerHttpContext = (req: express.Request, res: express.Response, next: express.NextFunction): void => {
     const httpContext: HTTP.IHttpContext = {
         req, 
         res
@@ -21,5 +21,5 @@ export const registerHttpContext = (req: express.Request, res: express.Response,
         httpContext: asValue(httpContext)
     });
 
-    next();
+    return next();
 }

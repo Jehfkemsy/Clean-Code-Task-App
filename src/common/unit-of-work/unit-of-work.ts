@@ -1,5 +1,3 @@
-import { IRepository } from './../repositories/repository';
-
 /**
  * Represents a consistent business transaction in which all parts must 
  * succeed lest the entire operation be aborted.

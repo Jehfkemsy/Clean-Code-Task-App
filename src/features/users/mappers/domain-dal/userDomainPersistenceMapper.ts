@@ -3,7 +3,7 @@ import { IDomainPersistenceMapper } from '../../../../common/mappers/domain-dal/
 import { User } from '../../models/domain/user';
 import { UserDalEntity } from '../../models/entity/user';
 
-export const UserDomainPersistenceMapper = (): IDomainPersistenceMapper<User, UserDalEntity> => ({
+export default (): IDomainPersistenceMapper<User, UserDalEntity> => ({
     toPersistence: (user: User): UserDalEntity => ({
         user_id: user.id,
         first_name: user.firstName,

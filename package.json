@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start:build": "tsc -w",
-    "start:run": "env-cmd -f ./env/dev.env nodemon build/server.js",
+    "start:run": "nodemon ./build/server.js",
     "start": "concurrently npm:start:*"
   },
   "keywords": [],

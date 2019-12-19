@@ -10,5 +10,7 @@ export const errorHandlerStackLoader = (app: express.Application): express.Appli
     errorHandlers.forEach(errorHandler => app.use(errorHandlerProvider(errorHandler)));
     app.use(catchAllHandler);
 
+    console.log('scaffold')
+
     return app;
 }

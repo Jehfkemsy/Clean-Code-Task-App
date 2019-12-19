@@ -40,10 +40,10 @@ export interface IUserService {
 /**
  * Contains methods that encapsulate primary user-related business logic.
  */
-export class UserService extends EventEmitter implements IUserService {
+export default class UserService extends EventEmitter implements IUserService {
     public constructor (
         private readonly userRepository: IUserRepository,
-        private readonly authService: IAuthenticationService,
+        private readonly authenticationService: IAuthenticationService,
         private readonly knexUnitOfWorkFactory: IUnitOfWorkFactory
     ) {
         super();
@@ -67,7 +67,7 @@ export class UserService extends EventEmitter implements IUserService {
         if (emailTaken)
             throw CreateUserErrors.EmailTakenError.create();
 
-        const hash = await this.authService.hashPassword(userDTO.password);
+        const hash = await this.authenticationService.hashPassword(userDTO.password);
 
         const user: User = buildUser({ ...userDTO, password: hash })
 
@@ -91,11 +91,11 @@ export class UserService extends EventEmitter implements IUserService {
         try {
             // This throws if no user is found by the specified email.
             const user = await this.userRepository.findUserByEmail(email);
-            const isAuthorized = await this.authService.comparePasswords(password, user.password);
+            const isAuthorized = await this.authenticationService.comparePasswords(password, user.password);
 
             if (!isAuthorized) throw AuthenticationErrors.AuthorizationError.create();
 
-            const token = this.authService.generateAuthToken({ id: user.id });
+            const token = this.authenticationService.generateAuthToken({ id: user.id });
 
             this.emit(userEvents.userLoggedIn, { id: user.id });
 
