@@ -29,6 +29,11 @@ export class UserRepository extends BaseKnexRepository implements IUserRepositor
     private readonly dbContext: Knex | Knex.Transaction;
     private readonly dataMapper: IDomainPersistenceMapper<User, UserDalEntity>;
 
+    // Test in-memory collection.
+    private users: UserDalEntity[] = [
+
+    ];
+
     public constructor (
         knexInstance: Knex | Knex.Transaction,
         userDomainPersistenceMapper: IDomainPersistenceMapper<User, UserDalEntity>
@@ -39,42 +44,68 @@ export class UserRepository extends BaseKnexRepository implements IUserRepositor
     }
 
     async insertUser(user: User): Promise<void> {
-        throw new Error("Method not implemented.");
+        return this.handleErrors(async (): Promise<void> => {
+            const dalUser = this.dataMapper.toPersistence(user);
+            await this.users.push(dalUser);
+        });
     }
 
     async getAllUsers(): Promise<User[]> {
-        throw new Error("Method not implemented.");
+        return this.handleErrors(async (): Promise<User[]> => {
+            const rawUsers = await this.users;
+            return rawUsers.map(rawUser => this.dataMapper.toDomain(rawUser));
+        });
     }
 
     async getUserById(id: string): Promise<User> {
-        throw new Error("Method not implemented.");
+        return this.handleErrors(async (): Promise<User> => {
+            const rawUser = await this.users.filter(user => user.user_id === id)[0];
+            return this.dataMapper.toDomain(rawUser);
+        });
     }
 
     async findUserByEmail(email: string): Promise<User> {
-        throw new Error("Method not implemented.");
+        return this.handleErrors(async (): Promise<User> => {
+            const rawUser = await this.users.filter(user => user.email === email)[0];
+            if (!rawUser) throw new Error();
+            return this.dataMapper.toDomain(rawUser);
+        });
     }
 
     async updateUser(user: User): Promise<void> {
-        throw new Error("Method not implemented.");
+        return this.handleErrors(async (): Promise<void> => {
+            const oldRawUserIndex = await this.users.findIndex(rawUser => rawUser.user_id === user.id);
+            this.users[oldRawUserIndex] = this.dataMapper.toPersistence(user);
+        });
     }
 
     async removeUserById(id: string): Promise<void> {
-        throw new Error("Method not implemented.");
+        return this.handleErrors(async (): Promise<void> => {
+            this.users = await this.users.filter(user => user.user_id !== id);
+        });
     }
 
     async existsByUsername(username: string): Promise<boolean> {
-        throw new Error("Method not implemented.");
+        return this.handleErrors(async (): Promise<boolean> => {
+            return this.users.includes(this.users.filter(user => user.username === username)[0]);
+        });
     }
 
     async existsByEmail(email: string): Promise<boolean> {
-        throw new Error("Method not implemented.");
+        return this.handleErrors(async (): Promise<boolean> => {
+            return this.users.includes(this.users.filter(user => user.email === email)[0]);
+        });
     }
 
     async exists(t: User): Promise<boolean> {
-        throw new Error("Method not implemented.");
+        return this.handleErrors(async (): Promise<boolean> => {
+            return this.users.includes(this.dataMapper.toPersistence(t));
+        });
     }
 
     async existsById(id: string): Promise<boolean> {
-        throw new Error("Method not implemented.");
+        return this.handleErrors(async (): Promise<boolean> => {
+            return this.users.includes(this.users.filter(user => user.user_id === id)[0]);
+        });
     }
 }
