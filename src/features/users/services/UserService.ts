@@ -24,6 +24,8 @@ import { AuthenticationErrors } from '../../auth/errors';
 import { userEvents } from '../pub-sub/events/events';
 import { CommonErrors } from '../../../common/errors';
 
+import { IUnitOfWorkFactory } from '../../../common/unit-of-work/unit-of-work';
+
 /**
  * Interface providing methods for use with business logic-related operations.
  */
@@ -41,7 +43,8 @@ export interface IUserService {
 export class UserService extends EventEmitter implements IUserService {
     public constructor (
         private readonly userRepository: IUserRepository,
-        private readonly authService: IAuthenticationService
+        private readonly authService: IAuthenticationService,
+        private readonly knexUnitOfWorkFactory: IUnitOfWorkFactory
     ) {
         super();
     }
@@ -146,7 +149,9 @@ export class UserService extends EventEmitter implements IUserService {
     }
 
     async deleteUserById(id: string): Promise<void> {
-        console.log(id);
-        throw new Error("Method not implemented.");
+        const unitOfWork = await this.knexUnitOfWorkFactory.create();
+        const boundUserRepository = this.userRepository.forUnitOfWork(unitOfWork);
+
+        await boundUserRepository.removeUserById(id);
     }
 }

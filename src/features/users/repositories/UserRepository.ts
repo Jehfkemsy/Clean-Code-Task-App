@@ -14,7 +14,7 @@ import { KnexUnitOfWork } from '../../../common/unit-of-work/UnitOfWork';
 /**
  * Interface providing methods for use with persistence-related operations.
  */
-export interface IUserRepository extends IRepository<User> {
+export interface IUserRepository extends IRepository<User>, IUnitOfWorkCapable {
     insertUser(user: User): Promise<void>;
     getAllUsers(): Promise<User[]>;
     getUserById(id: string): Promise<User>;
@@ -28,7 +28,7 @@ export interface IUserRepository extends IRepository<User> {
 /**
  * Contains helper methods for interfacing with a given persistence technology.
  */
-export class UserRepository extends BaseKnexRepository implements IUserRepository, IUnitOfWorkCapable<User> {
+export class UserRepository extends BaseKnexRepository implements IUserRepository {
     private readonly dbContext: Knex | Knex.Transaction;
     private readonly dataMapper: IDomainPersistenceMapper<User, UserDalEntity>;
 
@@ -112,7 +112,7 @@ export class UserRepository extends BaseKnexRepository implements IUserRepositor
         });
     }
 
-    public forUnitOfWork(unitOfWork: IUnitOfWork): IUserRepository {
-        return new UserRepository((unitOfWork as KnexUnitOfWork).trxContext, this.dataMapper);
+    public forUnitOfWork(unitOfWork: IUnitOfWork): this {
+        return new UserRepository((unitOfWork as KnexUnitOfWork).trxContext, this.dataMapper) as this;
     }
 }

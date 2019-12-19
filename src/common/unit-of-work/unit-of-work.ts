@@ -29,10 +29,10 @@ export interface IUnitOfWorkFactory {
 /**
  * Represents a repository that may re-instantiate itself bound to a Unit of Work.
  */
-export interface IUnitOfWorkCapable<T> {
+export interface IUnitOfWorkCapable {
     /**
      * Provides a new instance of a repository bound to a Unit of Work.
      * @param unitOfWork The transaction context.
      */
-    forUnitOfWork(unitOfWork: IUnitOfWork): IRepository<T>;
+    forUnitOfWork(unitOfWork: IUnitOfWork): this;
 }
