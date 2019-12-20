@@ -3,13 +3,10 @@ import express from 'express';
 import { AwilixContainer } from 'awilix';
 
 import { securityLoaders } from './loaders/security';
+import { errorHandlerStackLoader } from './loaders/errors/errorLoading';
 
 import { scopePerRequest, loadControllers } from 'awilix-express';
 import { registerHttpContext } from './middleware/express/di/http-context';
-import { errorHandlerStackLoader } from './loaders/errors/errorLoading';
-
-import { errors } from 'celebrate';
-
 
 export default (container: AwilixContainer): express.Application => {
     const app = express();
@@ -23,15 +20,7 @@ export default (container: AwilixContainer): express.Application => {
 
     securityLoaders.forEach(loader => app.use(loader));
 
-   // errorHandlerStackLoader(app);
-    app.use(errors());
-    
-
-    console.log('give back')
+    errorHandlerStackLoader(app);
 
     return app;
-}
-
-process.on('uncaughtException', (err) => {
-    console.log(err)
-})
+};

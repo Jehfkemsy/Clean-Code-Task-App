@@ -26,13 +26,6 @@ export class UserController extends BaseHTTPController {
     }
 
     @POST()
-    @route('/test')
-    async test(request: Request, response: Response): Promise<Response> {
-        console.log('here')
-        return response.status(200).send('hi')
-    }
-
-    @POST()
     @before(celebrate({ body: UserValidators.createUser }))
     async createUser(request: Request): Promise<Response> {
         await this.userService.signUpUser(request.body as CreateUserDTO);

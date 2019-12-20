@@ -23,8 +23,8 @@ export const configureContainer = (): AwilixContainer => {
     const container = createContainer({ injectionMode: InjectionMode.CLASSIC });
 
     // Awilix helper methods for Scoped Lifetime.
-    const asClassScoped = <T extends Constructor<T>>(dep: T): BuildResolver<T> & DisposableResolver<T> => asClass(dep, { lifetime: Lifetime.SCOPED });
-    const asFunctionScoped = <T extends FunctionReturning<T>>(dep: T): BuildResolver<T> & DisposableResolver<T> => asFunction(dep, { lifetime: Lifetime.SCOPED });
+    // const asClassScoped = <T extends Constructor<T>>(dep: T): BuildResolver<T> & DisposableResolver<T> => asClass(dep, { lifetime: Lifetime.SCOPED });
+    // const asFunctionScoped = <T extends FunctionReturning<T>>(dep: T): BuildResolver<T> & DisposableResolver<T> => asFunction(dep, { lifetime: Lifetime.SCOPED });
 
     // Register Services, Repositories, Mappers, and Adapters.
     container.loadModules([
