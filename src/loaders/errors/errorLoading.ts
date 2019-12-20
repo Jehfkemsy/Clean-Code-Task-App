@@ -8,9 +8,9 @@ import { errors } from 'celebrate';
  * @param app Express Application
  */
 export const errorHandlerStackLoader = (app: express.Application): express.Application => {
-    // Per-Namespace, Celebrate, and Generic Catch-All Error Handlers.
-    errorHandlers.forEach(errorHandler => app.use(errorHandlerProvider(errorHandler)));
+    // Celebrate, Per-Namespace, and Generic Catch-All Error Handlers.
     app.use(errors());
+    errorHandlers.forEach(errorHandler => app.use(errorHandlerProvider(errorHandler)));
     app.use(catchAllHandler);
 
     console.log('Applied error handling middleware functions to Express stack');

@@ -19,6 +19,7 @@ export class BaseKnexRepository implements IBaseKnexRepository {
             return await dalOperation();
         } catch (err) {
             // Throw wrapped exceptions here.
+            console.log('base error', err)
             throw err;
         }
     }

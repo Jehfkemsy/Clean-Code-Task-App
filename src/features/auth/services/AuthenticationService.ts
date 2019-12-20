@@ -6,6 +6,8 @@ import { right, left } from './../../../utils/logic/Either';
 
 import { AuthenticationErrors } from './../errors';
 
+process.env.JWT_SECRET = 'somesecret';
+
 /**
  * Interface providing methods for use with authentication/authorization-related operations.
  */

@@ -1,3 +1,5 @@
+import 'source-map-support/register';
+
 import * as awilix from 'awilix';
 import appFactory from './app';
 

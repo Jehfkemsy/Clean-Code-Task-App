@@ -17,6 +17,6 @@ export const userErrorHandler: ErrorHandlerFunction = (
         case CreateUserErrors.EmailTakenError:
             return res.status(409).send(err.serializeError());
         default:
-            return next();
+            return next(err);
     }
 };

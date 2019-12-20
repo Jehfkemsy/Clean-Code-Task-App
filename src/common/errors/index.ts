@@ -15,8 +15,9 @@ export namespace BaseErrors {
             this.message = message;
             this.code = code;
 
+            Error.call(this); 
+            Error.captureStackTrace(this, this.constructor); 
             this.name = this.constructor.name;
-            Error.captureStackTrace(this, this.constructor);
         }
 
         public serializeError(): ISerializedClientSafeError {
@@ -38,6 +39,19 @@ export namespace CommonErrors {
             return new ValidationError(
                 message ? message : 'Validation failed for the attempted operation.',
                 'C0'
+            );
+        }
+    }
+
+    export class NotFoundError extends BaseErrors.BaseError {
+        private constructor (message: string, code: string) {
+            super(message, code);
+        }
+
+        public static create(message?: string): ValidationError {
+            return new NotFoundError(
+                message ? message : 'The requested resource could not be found.',
+                'C1'
             );
         }
     }

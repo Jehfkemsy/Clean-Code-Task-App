@@ -13,7 +13,9 @@ export const commonErrorHandler = (
     switch (err.constructor) {
         case CommonErrors.ValidationError:
             return res.status(400).send(err.serializeError());
+        //case CommonErrors.NotFoundError:
+           // return res.status(404).send(err.serializeError());
         default:
-            return next();
+            return next(err);
     }
 }

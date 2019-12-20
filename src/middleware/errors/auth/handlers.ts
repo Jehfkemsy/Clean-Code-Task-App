@@ -18,6 +18,6 @@ export const authErrorHandler: ErrorHandlerFunction = (
         case AuthenticationErrors.AuthorizationError:
             return res.status(401).send(err.serializeError());
         default:
-            return next();
+            return next(err);
     }
 };

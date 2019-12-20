@@ -15,6 +15,6 @@ export const errorHandlerProvider = (
     if (err instanceof BaseErrors.BaseError && err.customError) {
         return handlerFunc(err, res, next);
     } else {
-        return next();
+        return next(err);
     }
 }

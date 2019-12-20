@@ -18,7 +18,7 @@ export default (container: AwilixContainer): express.Application => {
     app.use(registerHttpContext);
     app.use(loadControllers('./../build/features/*/controllers/*.js', { cwd: __dirname }));
 
-    securityLoaders.forEach(loader => app.use(loader));
+    securityLoaders.forEach(loader => app.use(loader()));
 
     errorHandlerStackLoader(app);
 

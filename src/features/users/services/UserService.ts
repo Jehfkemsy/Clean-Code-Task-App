@@ -81,10 +81,13 @@ export default class UserService extends EventEmitter implements IUserService {
     }    
     
     async loginUser(credentialsDTO: UserCredentialsDTO): Promise<LoggedInUserResponseDTO> {
+        console.log('In service')
         const validationResult = validate(UserValidators.userCredentials, credentialsDTO);
 
         if (validationResult.isLeft())
             throw CommonErrors.ValidationError.create(validationResult.value);
+
+        console.log('Validation complete')
 
         const { email, password } = credentialsDTO;
 
@@ -101,12 +104,14 @@ export default class UserService extends EventEmitter implements IUserService {
 
             return { token };
         } catch (e) {
+            console.log(e);
             // TODO: Support user failing to log in.
 
             // TODO: Refactor this switch statement.
             switch (e.constructor) {
                 case AuthenticationErrors.AuthorizationError:
-                    throw e;
+                case CommonErrors.NotFoundError:
+                    throw AuthenticationErrors.AuthorizationError.create();
                 default:
                     throw e;
             }
@@ -114,6 +119,8 @@ export default class UserService extends EventEmitter implements IUserService {
     }
 
     async getUserById(id: string): Promise<UserResponseDTO> {
+        debugger;
+        console.log('get by id', id)
         const user = await this.userRepository.getUserById(id);
         return mappers.toUserResponseDTO(user);
     }
@@ -153,5 +160,9 @@ export default class UserService extends EventEmitter implements IUserService {
         const boundUserRepository = this.userRepository.forUnitOfWork(unitOfWork);
 
         await boundUserRepository.removeUserById(id);
+
+        await unitOfWork.commit();
+
+        console.log('removed')
     }
 }

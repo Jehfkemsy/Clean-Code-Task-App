@@ -5,12 +5,13 @@ import Knex from 'knex';
  */
 export default (): Knex => {
     return Knex({
-        client: 'mysql',
-        version: '8.0',
+        client: 'pg',
+        version: '11',
         connection: {
             host: '127.0.0.1',
-            user: 'root',
-            password: 'password', 
+            port: 5433,
+            user: 'postgres',
+            password: 'root', 
             database: 'testing_knex'
         }
     });

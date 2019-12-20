@@ -42,16 +42,10 @@ export class UserController extends BaseHTTPController {
     }
 
     @GET()
-    @route('/:id')
-    async getUserById(request: Request): Promise<Response> {
-        const user = await this.userService.getUserById(request.params.id);
-        return this.withDTO<UserResponseDTO>(user);
-    }
-
-    @GET()
     @route('/me')
     @before([stripBearerToken, inject(verifyAuthProvider)])
     async getMe(request: Request): Promise<Response> {
+        console.log('Made it to first controller');
         if (!request.user) throw AuthenticationErrors.AuthorizationError.create();
         const user = await this.userService.getUserById(request.user.id);
         return this.withDTO<UserResponseDTO>(user);
@@ -70,7 +64,16 @@ export class UserController extends BaseHTTPController {
     @route('/me')
     @before([stripBearerToken, inject(verifyAuthProvider)])
     async deleteMe(request: Request): Promise<Response> {
-        await this.userService.deleteUserById(request.params.id);
+        if (!request.user) throw AuthenticationErrors.AuthorizationError.create();
+        await this.userService.deleteUserById(request.user.id);
         return this.ok();
+    }
+
+    @GET()
+    @route('/:id')
+    async getUserById(request: Request): Promise<Response> {
+        console.log('made it to wrong controller')
+        const user = await this.userService.getUserById(request.params.id);
+        return this.withDTO<UserResponseDTO>(user);
     }
 }
