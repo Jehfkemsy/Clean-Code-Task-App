@@ -22,7 +22,7 @@ import { CreateUserErrors } from '../errors';
 import { AuthenticationErrors } from '../../auth/errors';
 
 import { userEvents } from '../pub-sub/events/events';
-import { CommonErrors } from '../../../common/errors';
+import { CommonErrors, ApplicationErrors } from '../../../common/errors';
 
 import { IUnitOfWorkFactory } from '../../../common/unit-of-work/unit-of-work';
 
@@ -81,13 +81,10 @@ export default class UserService extends EventEmitter implements IUserService {
     }    
     
     async loginUser(credentialsDTO: UserCredentialsDTO): Promise<LoggedInUserResponseDTO> {
-        console.log('In service')
         const validationResult = validate(UserValidators.userCredentials, credentialsDTO);
 
         if (validationResult.isLeft())
             throw CommonErrors.ValidationError.create(validationResult.value);
-
-        console.log('Validation complete')
 
         const { email, password } = credentialsDTO;
 
@@ -113,14 +110,13 @@ export default class UserService extends EventEmitter implements IUserService {
                 case CommonErrors.NotFoundError:
                     throw AuthenticationErrors.AuthorizationError.create();
                 default:
-                    throw e;
+                    throw ApplicationErrors.UnexpectedError.create();
             }
         }
     }
 
     async getUserById(id: string): Promise<UserResponseDTO> {
-        debugger;
-        console.log('get by id', id)
+
         const user = await this.userRepository.getUserById(id);
         return mappers.toUserResponseDTO(user);
     }
@@ -162,7 +158,5 @@ export default class UserService extends EventEmitter implements IUserService {
         await boundUserRepository.removeUserById(id);
 
         await unitOfWork.commit();
-
-        console.log('removed')
     }
 }

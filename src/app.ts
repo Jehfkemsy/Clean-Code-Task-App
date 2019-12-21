@@ -2,7 +2,7 @@ import express from 'express';
 
 import { AwilixContainer } from 'awilix';
 
-import { securityLoaders } from './loaders/security';
+import { securityLoaders, securityStackLoader } from './loaders/security/securityLoading';
 import { errorHandlerStackLoader } from './loaders/errors/errorLoading';
 
 import { scopePerRequest, loadControllers } from 'awilix-express';
@@ -18,8 +18,8 @@ export default (container: AwilixContainer): express.Application => {
     app.use(registerHttpContext);
     app.use(loadControllers('./../build/features/*/controllers/*.js', { cwd: __dirname }));
 
-    securityLoaders.forEach(loader => app.use(loader()));
-
+    // Middleware Stackers
+    securityStackLoader(app);
     errorHandlerStackLoader(app);
 
     return app;

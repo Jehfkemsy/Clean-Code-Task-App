@@ -16,3 +16,5 @@ export default (): Knex => {
         }
     });
 }
+
+// TODO: Move to environment variables later!

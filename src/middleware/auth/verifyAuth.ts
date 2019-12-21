@@ -4,7 +4,7 @@ import { IAuthenticationService } from './../../features/auth/services/Authentic
 import { IUserRepository } from './../../features/users/repositories/UserRepository';
 
 import { AuthenticationErrors } from '../../features/auth/errors';
-import { CommonErrors } from '../../common/errors';
+import { CommonErrors, ApplicationErrors } from '../../common/errors';
 
 /**
  * Provides a `verifyAuth` middleware function that ensures a provided Bearer Token is valid.
@@ -13,7 +13,6 @@ export const verifyAuthProvider = (
     authenticationService: IAuthenticationService, 
     userRepository: IUserRepository
 ) => async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-    console.log('in provider')
     try {
         if (!req.token) throw AuthenticationErrors.AuthorizationError.create();
         
@@ -24,8 +23,6 @@ export const verifyAuthProvider = (
             throw decodedResult.value;
 
         const user = await userRepository.getUserById(decodedResult.value.id);
-
-        console.log('found by id')
 
         // Add user to DIC and Request here.
         req.user = user;
@@ -39,7 +36,7 @@ export const verifyAuthProvider = (
             case AuthenticationErrors.AuthorizationError:
                 throw AuthenticationErrors.AuthorizationError.create();
             default:
-                throw new Error();
+                throw ApplicationErrors.UnexpectedError.create();
         }
     }
 }

@@ -12,8 +12,11 @@ import {
     DisposableResolver, 
 } from 'awilix';
 
+// Third-Party Deps
 import bcrypt from 'bcryptjs';
 import jsonwebtoken from 'jsonwebtoken';
+
+// Custom Deps
 import { KnexUnitOfWorkFactory } from './../common/unit-of-work/UnitOfWork';
 
 /**
@@ -61,6 +64,7 @@ export const configureContainer = (): AwilixContainer => {
         formatName: 'camelCase'
     });
 
+    // Register custom dependencies.
     container.register({
         knexUnitOfWorkFactory: asClass(KnexUnitOfWorkFactory, { lifetime: Lifetime.SCOPED })
     })
