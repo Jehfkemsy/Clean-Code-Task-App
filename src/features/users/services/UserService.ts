@@ -53,8 +53,8 @@ export default class UserService extends EventEmitter implements IUserService {
     async signUpUser(userDTO: CreateUserDTO): Promise<void> {
         const validationResult = validate(UserValidators.createUser, userDTO);
 
-        if (validationResult.isLeft())
-            throw CommonErrors.ValidationError.create(validationResult.value);
+        if (validationResult.isLeft()) 
+            return Promise.reject(CommonErrors.ValidationError.create(validationResult.value));
 
         const [usernameTaken, emailTaken] = await Promise.all([
             this.userRepository.existsByUsername(userDTO.username),
@@ -62,16 +62,16 @@ export default class UserService extends EventEmitter implements IUserService {
         ]) as [boolean, boolean];
 
         if (usernameTaken)
-            throw CreateUserErrors.UsernameTakenError.create();
+            return Promise.reject(CreateUserErrors.UsernameTakenError.create());
     
         if (emailTaken)
-            throw CreateUserErrors.EmailTakenError.create();
+            return Promise.reject(CreateUserErrors.EmailTakenError.create());
 
         const hash = await this.authenticationService.hashPassword(userDTO.password);
 
         const user: User = buildUser({ ...userDTO, password: hash })
 
-        await this.userRepository.insertUser(user);
+        await this.userRepository.insertUser({ ...user, id: 'data' });
 
         this.emit(userEvents.userSignedUp, { 
             id: user.id,

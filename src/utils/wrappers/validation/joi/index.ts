@@ -10,10 +10,11 @@ type TErrorMessage = string;
  * @param candidate A candidate object to validate against the `schema`.
  */
 export const validate = <TCandidate>(schema: ObjectSchema, candidate: TCandidate): Either<TErrorMessage, TCandidate> => {
-    try {
-        schema.validate(candidate);
-        return right(candidate);
-    } catch (e) {
-        return left((e as ValidationError).message);
+    const { error, value } = schema.validate(candidate);
+
+    if (error) {
+        return left((error as ValidationError).message);
+    } else {
+        return right(value);
     }
 }
