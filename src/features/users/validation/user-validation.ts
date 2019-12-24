@@ -3,7 +3,7 @@ import Joi from '@hapi/joi';
 /**
  * Common fields for user validation related operations.
  */
-const userCommonFields = {
+const userCommonFields: { [key: string]: Joi.AnySchema } = {
     firstName: Joi.string()
         .min(2)
         .max(20)
@@ -29,6 +29,19 @@ const userCommonFields = {
         .required(),
 };
 
+const joiGenericMapper = (
+    toModify: Joi.SchemaMap, 
+    modifier: (currSchema: Joi.AnySchema) => Joi.AnySchema
+): Joi.SchemaMap => {
+    const modifiedObject: Joi.SchemaMap = {};
+
+    Object.keys(toModify).map((key) => {
+        modifiedObject[key] = modifier(userCommonFields[key]);
+    });
+
+    return modifiedObject;
+};
+
 export namespace UserValidators {
     export const createUser = Joi.object().keys({
         ...userCommonFields,
@@ -41,8 +54,7 @@ export namespace UserValidators {
             .required()
     });  
 
-    export const updateUser = Joi.object(userCommonFields)
-        .optional();
+    export const updateUser = Joi.object(joiGenericMapper(userCommonFields, currSchema => currSchema.optional()));
 
     export const user = createUser.keys({
         id: Joi.string().required()

@@ -84,13 +84,13 @@ export default class UserService extends EventEmitter implements IUserService {
         const validationResult = validate(UserValidators.userCredentials, credentialsDTO);
 
         if (validationResult.isLeft())
-            throw CommonErrors.ValidationError.create(validationResult.value);
+            return Promise.reject(CommonErrors.ValidationError.create(validationResult.value));
 
         const { email, password } = credentialsDTO;
 
         try {
             // This throws if no user is found by the specified email. 
-            // Saves an extra network call than using existsByEmail: Promise<boolean>;
+            // Saves an extra network call than using existsByEmail: Promise<boolean>; and then this.
             const user = await this.userRepository.findUserByEmail(email);
             const isAuthorized = await this.authenticationService.comparePasswords(password, user.password);
 
@@ -123,17 +123,17 @@ export default class UserService extends EventEmitter implements IUserService {
     async updateUserById(id: string, updateUserDTO: UpdateUserDTO): Promise<void> {
         const validationResult = validate(UserValidators.updateUser, updateUserDTO);
 
-        if (validationResult.isLeft())
-            throw CommonErrors.ValidationError.create(validationResult.value);
+        if (validationResult.isLeft()) 
+            return Promise.reject(CommonErrors.ValidationError.create(validationResult.value));
 
         if (updateUserDTO.email) {
-            const emailTaken = this.userRepository.existsByEmail(updateUserDTO.email);
-            if (emailTaken) throw CreateUserErrors.EmailTakenError.create();
+            const emailTaken = await this.userRepository.existsByEmail(updateUserDTO.email);
+            if (emailTaken) return Promise.reject(CreateUserErrors.EmailTakenError.create());
         }
 
         if (updateUserDTO.username) {
-            const usernameTaken = this.userRepository.existsByUsername(updateUserDTO.username);
-            if (usernameTaken) throw CreateUserErrors.UsernameTakenError.create();
+            const usernameTaken = await this.userRepository.existsByUsername(updateUserDTO.username);
+            if (usernameTaken) return Promise.reject(CreateUserErrors.UsernameTakenError.create());
         }
 
         const user = await this.userRepository.getUserById(id);
