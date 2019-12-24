@@ -89,11 +89,12 @@ export default class UserService extends EventEmitter implements IUserService {
         const { email, password } = credentialsDTO;
 
         try {
-            // This throws if no user is found by the specified email.
+            // This throws if no user is found by the specified email. 
+            // Saves an extra network call than using existsByEmail: Promise<boolean>;
             const user = await this.userRepository.findUserByEmail(email);
             const isAuthorized = await this.authenticationService.comparePasswords(password, user.password);
 
-            if (!isAuthorized) throw AuthenticationErrors.AuthorizationError.create();
+            if (!isAuthorized) return Promise.reject(AuthenticationErrors.AuthorizationError.create());
 
             const token = this.authenticationService.generateAuthToken({ id: user.id });
 
@@ -101,22 +102,20 @@ export default class UserService extends EventEmitter implements IUserService {
 
             return { token };
         } catch (e) {
-            console.log(e);
             // TODO: Support user failing to log in.
 
             // TODO: Refactor this switch statement.
             switch (e.constructor) {
                 case AuthenticationErrors.AuthorizationError:
                 case CommonErrors.NotFoundError:
-                    throw AuthenticationErrors.AuthorizationError.create();
+                    return Promise.reject(AuthenticationErrors.AuthorizationError.create());
                 default:
-                    throw ApplicationErrors.UnexpectedError.create();
+                    return Promise.reject(ApplicationErrors.UnexpectedError.create());
             }
         }
     }
 
     async getUserById(id: string): Promise<UserResponseDTO> {
-
         const user = await this.userRepository.getUserById(id);
         return mappers.toUserResponseDTO(user);
     }

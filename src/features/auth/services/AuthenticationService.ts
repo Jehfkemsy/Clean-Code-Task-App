@@ -41,7 +41,11 @@ export default class AuthenticationService implements IAuthenticationService {
         return new Promise((resolve, reject) => {
             // Will auto-generate a salt.
             this.bcrypt.hash(plainTextPassword, rounds, (err: Error, hash: string) => {
-                if (err) return reject(err);
+                if (err) {
+                    // TODO: Log
+                    return reject(AuthenticationErrors.CouldNotHashPasswordError.create());
+                }
+
                 return resolve(hash);
             });
         });
@@ -50,7 +54,10 @@ export default class AuthenticationService implements IAuthenticationService {
     comparePasswords(candidate: string, hash: string): Promise<boolean> {
         return new Promise((resolve, reject) => {
             this.bcrypt.compare(candidate, hash, (err: Error, res: boolean) => {
-                if (err) return reject(err);
+                if (err) {
+                    // TODO: Log
+                    return reject(AuthenticationErrors.CouldNotCompareHashesError.create());
+                }
                 return resolve(res);
             });
         });

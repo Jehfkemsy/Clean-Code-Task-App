@@ -26,4 +26,30 @@ export namespace AuthenticationErrors {
             );
         }
     }
+
+    export class CouldNotHashPasswordError extends BaseErrors.BaseError {
+        private constructor (message: string, code: string) {
+            super(message, code);
+        }
+
+        public static create(message?: string): CouldNotHashPasswordError {
+            return new CouldNotHashPasswordError(
+                message ? message : 'Could not hash the provided password.',
+                'A2'
+            );
+        }
+    }
+
+    export class CouldNotCompareHashesError extends BaseErrors.BaseError {
+        private constructor (message: string, code: string) {
+            super(message, code);
+        }
+
+        public static create(message?: string): CouldNotCompareHashesError {
+            return new CouldNotCompareHashesError(
+                message ? message : 'Could not compare the provided hashes.',
+                'A3'
+            );
+        }
+    }
 }
