@@ -9,6 +9,7 @@ import { AuthenticationErrors } from './../../../../../src/features/auth/errors'
 // Repository & UoW
 import { IUserRepository } from './../../../../../src/features/users/repositories/UserRepository';
 import { IUnitOfWorkFactory } from './../../../../../src/common/unit-of-work/unit-of-work';
+import { IUnitOfWork } from './../../../../../src/common/unit-of-work/unit-of-work';
 
 // Service & Service DTOs
 import UserService from './../../../../../src/features/users/services/UserService';
@@ -391,5 +392,29 @@ describe('UserService.updateUserById()', () => {
         });       
     });   
 });
+
+describe('UserService.deleteUserById()', () => {
+    describe('with no issues', () => {
+        test('should create a UoW and call the repository correctly', async () => {
+            // Arrange
+            const userID = '132';
+            const mockUnitOfWork: IUnitOfWork = {
+                commit: jest.fn().mockResolvedValue(null),
+                rollback: jest.fn().mockResolvedValue(null)
+            }
+            when(mockUoWFactory.create()).thenResolve(mockUnitOfWork);
+            when(mockUserRepo.forUnitOfWork(deepEqual(mockUnitOfWork))).thenReturn(instance(mockUserRepo));
+            when(mockUserRepo.removeUserById(userID)).thenResolve();
+    
+            // Act
+            await userService.deleteUserById(userID);
+    
+            // Assert
+            verify(mockUserRepo.removeUserById(anyString())).once();
+            expect(mockUnitOfWork.commit).toHaveBeenCalledTimes(1);
+        });
+    });    
+});
+
 
 
